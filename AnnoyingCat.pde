@@ -35,11 +35,34 @@ void initgame(){
   
   // Initialize strawberry
   strawberries = new Strawberry[100];
-  for(int i = 0; i < 5; i++){
-    float newX = 300 + i * BLOCK_SIZE;
+  for(int i = 0; i < 3; i++){
+    float newX = 460 + i * BLOCK_SIZE;
     float newY = 220;
     strawberries[i] = new Strawberry(newX, newY);
   }
+  
+  for(int i = 3; i < 9; i++){
+    float newX = 60 + width + (i-3) * 3 * BLOCK_SIZE;
+    float newY = 220;
+    strawberries[i] = new Strawberry(newX, newY);
+  }
+  
+  for(int i = 9; i < 12; i++){
+    float newX = 140 + width + (i-9) * 6 * BLOCK_SIZE;
+    float newY = 140;
+    strawberries[i] = new Strawberry(newX, newY);
+  }
+  
+  for(int i = 12; i < 15; i++){
+    float newX = 220 + width + (i-12) * 6 * BLOCK_SIZE;
+    float newY = 140;
+    strawberries[i] = new Strawberry(newX, newY);
+  }
+  
+  strawberries[15] = new Strawberry(strawberries[4].x + BLOCK_SIZE, strawberries[4].y + BLOCK_SIZE);
+  strawberries[16] = new Strawberry(strawberries[15].x + BLOCK_SIZE, strawberries[15].y);
+  strawberries[17] = new Strawberry(strawberries[16].x + 5 * BLOCK_SIZE, strawberries[15].y);
+  strawberries[18] = new Strawberry(strawberries[16].x + 6 * BLOCK_SIZE, strawberries[15].y);
   
   // Initialize frame & offset & speed
   frame = 0;
@@ -69,7 +92,11 @@ void draw() {
         if(i == null)continue;
         i.display();
         i.update();
-        //i.checkCollision(cat);
+        if(i.isAlive){
+          if( i.checkCollision(cat) ){
+            i.boom();
+          }
+        }
       }
       
       // Frame
@@ -83,4 +110,11 @@ void draw() {
     case GAME_WIN:
     break;
   }
+}
+
+boolean isHit(float ax, float ay, float aw, float ah, float bx, float by, float bw, float bh){
+  return  ax + aw > bx &&    // a right edge past b left
+        ax < bx + bw &&    // a left edge past b right
+        ay + ah > by &&    // a top edge past b bottom
+        ay < by + bh;
 }
